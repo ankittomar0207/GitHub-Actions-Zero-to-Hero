@@ -5,9 +5,8 @@ on: [push]
 jobs:
   # Job 1: Check OS
   build:
-    runs-on: ubuntu-latest
-	container:
-      image: ubuntu:20.04  # Runs all steps inside an Ubuntu 20.04 container
+    runs-on: ubuntu-22.04
+	# Runs all steps inside an Ubuntu 20.04 container
     
     steps:
       - name: Checkout repository
@@ -19,7 +18,7 @@ jobs:
   # Job 2: Run Python Tests (Waits for build to pass)
   jobs2:
     needs: build  # Ensures jobs2 runs after build succeeds
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     strategy:
       matrix:
