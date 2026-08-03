@@ -3,26 +3,43 @@ name: My First GitHub Actions updated by ankit tomar
 on: [push]
 
 jobs:
+  # Job 1: Check OS
   build:
+    runs-on: ubuntu-latest
+	container:
+      image: ubuntu:20.04  # Runs all steps inside an Ubuntu 20.04 container
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify OS Version
+        run: cat /etc/os-release
+
+  # Job 2: Run Python Tests (Waits for build to pass)
+  jobs2:
+    needs: build  # Ensures jobs2 runs after build succeeds
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        python-version: [3.10, 3.12]
+        python-version: ["3.10", "3.12"]
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: ${{ matrix.python-version }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
 
-    - name: Run tests
-      run: |
-        cd src
-        python -m pytest addition.py
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: Run tests
+        run: |
+          cd src
+          python -m pytest addition.py
